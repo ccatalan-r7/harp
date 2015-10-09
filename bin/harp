@@ -99,12 +99,15 @@ program
 program
   .command("multihost [path]")
   .option("-p, --port <port>", "Specify a port to listen on")
+  .option('-w, --whitelist <items>', 'Array of whitelisted sites in directory')
   .usage("starts a Harp server to host a directory of Harp projects.")
   .description("Start a Harp server to host a directory of Harp projects")
   .action(function(path, program){
     var projectPath = nodePath.resolve(process.cwd(), path || "")
     var port        = program.port || 9000
-    harp.multihost(projectPath, { port: port }, function(){
+    var whitelistString   = program.whitelist || undefined
+    var whitelist = whitelistString.split(",");
+    harp.multihost(projectPath, { port: port, whitelist: whitelist }, function(){
       if(port == "80"){
         var loc = "http://harp.nu"
       }else{
